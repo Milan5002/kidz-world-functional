@@ -1,9 +1,8 @@
-var cartValue = document.getElementById("cart-value");
-var cartButton = document.getElementById("cart");
+var addbtn = document.getElementsByClassName("icon");
+var item_number = document.querySelector("#item-input");
+var cartIcon = document.querySelector(".cart");
 
-var addButtons = document.getElementsByClassName("button");
-
-var items = [
+var itemslist = [
   {
     name: "This was our pact",
     quantity: 0,
@@ -90,53 +89,58 @@ var items = [
   },
 ];
 
+for (let i = 0; i < addbtn.length; i++) {
+  addbtn[i].addEventListener("click", () => {
+    itemslist[i].quantity++;
+    updateCart();
+  });
+}
+
 function updateCart() {
   let cart = 0;
-  for (index = 0; index < items.length; index++) {
-    cart = cart + items[index].quantity;
+  for (let i = 0; i < addbtn.length; i++) {
+    cart = cart + itemslist[i].quantity;
+    item_number.textContent = cart;
   }
-  cartValue.innerHTML = cart;
 }
-
-for (let i = 0; i < addButtons.length; i++) {
-  addButtons[i].onclick = (e) => {
-    items[i].quantity++;
-    updateCart();
-  };
-}
-
-var finalDollars = 0;
-var finalCents = 0;
 
 function updatePrice() {
   let totalPriceInCents = 0;
 
-  for (index = 0; index < items.length; index++) {
+  for (i = 0; i < itemslist.length; i++) {
     totalPriceInCents =
       totalPriceInCents +
-      items[index].quantity * (items[index].dollars * 100 + items[index].cents);
+      itemslist[i].quantity * (itemslist[i].dollars * 100 + itemslist[i].cents);
   }
   finalDollars = Math.floor(totalPriceInCents / 100);
   finalCents = totalPriceInCents % 100;
 }
 
+cartIcon.addEventListener("click", finalOutput);
 
-cartButton.onclick = () => {
+function finalOutput() {
   updatePrice();
-
-
-  for (let index = 0; index < items.length; index++) {
-    if (items[index].quantity != 0) {
+  var text = "";
+  for (let i = 0; i < itemslist.length; i++) {
+    if (itemslist[i].quantity !== 0) {
       console.log(
-        "Item name: " +
-          items[index].name +
+        "Item name:" +
+          itemslist[i].name +
           " - Quantity: " +
-          items[index].quantity
+          itemslist[i].quantity
       );
+      text +=
+        "Item name:" +
+        itemslist[i].name +
+        " - Quantity: " +
+        itemslist[i].quantity +
+        " ; ";
     }
   }
-
   console.log(
     "The total amount is " + finalDollars + "$ and " + finalCents + " cents"
   );
-};
+  text +=
+    "The total amount is " + finalDollars + "$ and " + finalCents + " cents";
+  window.open("https://wa.me/7702331636?text=" + text);
+}
